@@ -2,7 +2,7 @@ import requests
 import yaml
 from pathlib import Path
 import re
-
+import yaml_functions
 
 def sanitize_filename(filename):
     """
@@ -104,3 +104,17 @@ def get_many_models(cloudfront_url, champions_data, save_directory, champions_li
             if limit is not None and download_count >= limit:
                 print(f"Reached download limit of {limit}. Exiting.")
                 return  # Exit the function if the limit is reached
+
+def update_yaml_file_if_needed(yaml_file_path):
+    """
+    Check if the YAML file needs to be updated and update it if necessary.
+    """
+    current_champions_data = yaml_functions.get_champions_data()
+    existing_data = load_yaml_file(yaml_file_path)
+
+    if current_champions_data != existing_data:
+        champions_data_with_skins = yaml_functions.add_skin_data(current_champions_data)
+        yaml_functions.save_champion_skin_mapping(champions_data_with_skins, yaml_file_path)
+        print("YAML file updated with the latest champions data.")
+    else:
+        print("No updates required for the YAML file.")
