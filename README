@@ -1,0 +1,13 @@
+Requeriments:
+    - Python 3.10.0 was used in creating all files. Any version higher should still work but see bpy (Blender api) requeriments.
+
+Generating YAML File:
+    - Under model_collection directory run the file yaml_creation.py (or .ipynb file with the same name)
+        - This file will be saved in the model_collection directory which will be needed for collecting models
+
+Collecting 3d Model Assets:
+    - Under model_collection directory run the file model_collection.py (or .ipynb file with the same name), make sure to have the .yaml file created and in the same directory as model_collection.py (or .ipynb file with the same name)
+        - These 3d models will be saved in the models folder in the parent directory as glb files under the champion name they belong
+
+Generating Images of 3d Assets:
+    - Under generate_data directory run the file generate_images.py (or .ipynb file with the same name)

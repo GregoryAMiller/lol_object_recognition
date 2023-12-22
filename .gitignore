@@ -1,0 +1,9 @@
+# Ignore directories
+images/
+models/
+venv/
+
+# Ignore specific files
+ahri_example.blend
+notes.txt
+*.glb
