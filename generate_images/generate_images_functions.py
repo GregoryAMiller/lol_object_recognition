@@ -1,24 +1,18 @@
 import bpy
 import math
+from pathlib import Path
 
 # Function to ensure there is an active camera in the scene
 def ensure_camera_exists():
     # Check if there is any camera in the scene
     cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
-    if cameras:
-        # Set the first found camera as the active camera
-        bpy.context.scene.camera = cameras[0]
-    else:
-        # Create and set up the camera
-        bpy.ops.object.camera_add(location=(12.391, -1412.3, 457.6))
-        camera = bpy.context.object
-        camera.data.type = 'PERSP'
-        camera.data.clip_end = 100000
-        camera.rotation_mode = 'XYZ'
-        camera.rotation_euler[0] = math.radians(76.4)
-        camera.rotation_euler[1] = math.radians(-0.000029)
-        camera.rotation_euler[2] = math.radians(-0.000001)
-        bpy.context.scene.camera = camera
+    if not cameras:
+        # No cameras found, set up cameras as defined in setup_cameras
+        setup_cameras()
+        cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
+
+    # Set the first found camera as the active camera
+    bpy.context.scene.camera = cameras[0] if cameras else None
 
 # Function to update the scene and context
 def update_scene():
@@ -26,17 +20,27 @@ def update_scene():
     bpy.context.evaluated_depsgraph_get().update()
 
 # Function to render and save the image in the specified directory structure
-def render_and_save(frame_number, track_name, strip_name, champion_name, skin_name):
-    ensure_camera_exists()
-    bpy.context.scene.frame_set(frame_number)
-    # Adjust the filename to include the strip name for uniqueness
-    filename = f"{track_name}_{strip_name}_frame{frame_number}.png"
-    # Create directory path for the current champion and skin
-    champion_skin_dir = Path(output_dir) / champion_name / skin_name
-    champion_skin_dir.mkdir(parents=True, exist_ok=True)
-    file_path = champion_skin_dir / filename
-    bpy.context.scene.render.filepath = str(file_path)
-    bpy.ops.render.render(write_still=True)
+def render_and_save(frame_number, track_name, strip_name, champion_name, skin_name, cameras, output_dir):
+    for camera in cameras:
+        # Set the current camera as the active camera
+        bpy.context.scene.camera = camera
+
+        # Frame setup
+        bpy.context.scene.frame_set(frame_number)
+
+        # Filename adjusted to include camera name for uniqueness
+        filename = f"{track_name}_{strip_name}_frame{frame_number}_{camera.name}.png"
+
+        # Directory path for the current champion and skin
+        champion_skin_dir = Path(output_dir) / champion_name / skin_name
+        champion_skin_dir.mkdir(parents=True, exist_ok=True)
+        
+        # File path for saving the render
+        file_path = champion_skin_dir / filename
+
+        # Render settings
+        bpy.context.scene.render.filepath = str(file_path)
+        bpy.ops.render.render(write_still=True)
 
 
 # Function to clear all objects in the scene
@@ -66,7 +70,8 @@ def setup_cameras():
     # Define test locations and rotations for cameras
     camera_settings = [
         ((12.391, -1412.3, 457.6), (76.4, 0, 0), 'Camera1'),
-
+        ((50, -1300, 400), (80, 0, 15), 'Camera2'),
+        ((-30, -1250, 420), (75, 0, -15), 'Camera3'),
     ]
 
     # Add cameras to the scene
@@ -117,7 +122,7 @@ def move_action_to_nla(armature_name, action_name):
     else:
         print(f"No active action on armature '{armature_name}' to move.")
 
-def process_all_tracks(armature_name, champion_name, skin_name, track_limit=None):
+def process_all_tracks(armature_name, champion_name, skin_name, output_dir, track_limit=None):
     armature = bpy.data.objects.get(armature_name)
     bpy.context.view_layer.objects.active = armature
     armature.select_set(True)
@@ -146,10 +151,11 @@ def process_all_tracks(armature_name, champion_name, skin_name, track_limit=None
                     interval = max(2, animation_length // 20)
                 else:
                     interval = max(5, animation_length // 50)
-
+                
+                cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
                 # Render at calculated intervals within this strip
                 for frame in range(frame_start, frame_end + 1, interval):
-                    render_and_save(frame, track.name, strip.name, champion_name, skin_name)
+                    render_and_save(frame, track.name, strip.name, champion_name, skin_name, cameras, output_dir)
 
             track.mute = True
             update_scene()

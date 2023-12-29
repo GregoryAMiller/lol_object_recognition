@@ -1,5 +1,6 @@
 import generate_images_functions
 from pathlib import Path
+import bpy
 
 def main():
     # Base directory for the league_object_detection_tracking folder
@@ -17,7 +18,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Set a limit for the number of models to process
-    models_limit = 18
+    models_limit = 2
     # Counter for models proccessed in loop
     models_processed = 0
     # Set a limit for the number of Tracks to process
@@ -69,7 +70,7 @@ def main():
                                 generate_images_functions.move_action_to_nla(animated_object_name, action_name)
 
                             # Process all NLA tracks for the animated object
-                            generate_images_functions.process_all_tracks(animated_object_name, champion_name, skin_name, track_limit)
+                            generate_images_functions.process_all_tracks(animated_object_name, champion_name, skin_name, output_dir, track_limit)
                             
                         else:
                             print("No animated objects found in this model.")
