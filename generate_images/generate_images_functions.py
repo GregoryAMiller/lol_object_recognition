@@ -2,45 +2,54 @@ import bpy
 import math
 from pathlib import Path
 
-# Function to ensure there is an active camera in the scene
-def ensure_camera_exists():
-    # Check if there is any camera in the scene
-    cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
-    if not cameras:
-        # No cameras found, set up cameras as defined in setup_cameras
-        setup_cameras()
-        cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
 
-    # Set the first found camera as the active camera
-    bpy.context.scene.camera = cameras[0] if cameras else None
+# Function to ensure there is an active camera in the scene
+# def ensure_camera_exists():
+#     # Check if there is any camera in the scene
+#     cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
+#     if cameras:
+#         # Set the first found camera as the active camera
+#         bpy.context.scene.camera = cameras[0]
+#     else:
+#         # Create and set up the camera
+#         bpy.ops.object.camera_add(location=(12.391, -1412.3, 457.6))
+#         camera = bpy.context.object
+#         camera.data.type = 'PERSP'
+#         camera.data.clip_end = 100000
+#         camera.rotation_mode = 'XYZ'
+#         camera.rotation_euler[0] = math.radians(76.4)
+#         camera.rotation_euler[1] = math.radians(-0.000029)
+#         camera.rotation_euler[2] = math.radians(-0.000001)
+#         bpy.context.scene.camera = camera
+
+def set_active_camera_by_name(camera_name):
+    if camera_name in bpy.data.cameras:
+        # Set the active camera
+        bpy.context.scene.camera = bpy.data.objects[camera_name]
+        print(f"Active camera set to {camera_name}")
+    else:
+        print(f"Camera named {camera_name} not found in the scene.")
+
 
 # Function to update the scene and context
 def update_scene():
     bpy.context.view_layer.update()
     bpy.context.evaluated_depsgraph_get().update()
 
+
 # Function to render and save the image in the specified directory structure
-def render_and_save(frame_number, track_name, strip_name, champion_name, skin_name, cameras, output_dir):
-    for camera in cameras:
-        # Set the current camera as the active camera
-        bpy.context.scene.camera = camera
-
-        # Frame setup
-        bpy.context.scene.frame_set(frame_number)
-
-        # Filename adjusted to include camera name for uniqueness
-        filename = f"{track_name}_{strip_name}_frame{frame_number}_{camera.name}.png"
-
-        # Directory path for the current champion and skin
-        champion_skin_dir = Path(output_dir) / champion_name / skin_name
-        champion_skin_dir.mkdir(parents=True, exist_ok=True)
-        
-        # File path for saving the render
-        file_path = champion_skin_dir / filename
-
-        # Render settings
-        bpy.context.scene.render.filepath = str(file_path)
-        bpy.ops.render.render(write_still=True)
+def render_and_save(frame_number, track_name, strip_name, champion_name, skin_name, camera_number):
+    # ensure_camera_exists()
+    bpy.context.scene.frame_set(frame_number)
+    # Adjust the filename to include the strip name for uniqueness
+    filename = f"{track_name}_{strip_name}_frame{frame_number}_camera{camera_number}.png"
+    # Create directory path for the current champion and skin
+    output_dir = get_base_directory() / 'images'
+    champion_skin_dir = Path(output_dir) / champion_name / skin_name
+    champion_skin_dir.mkdir(parents=True, exist_ok=True)
+    file_path = champion_skin_dir / filename
+    bpy.context.scene.render.filepath = str(file_path)
+    bpy.ops.render.render(write_still=True)
 
 
 # Function to clear all objects in the scene
@@ -70,13 +79,16 @@ def setup_cameras():
     # Define test locations and rotations for cameras
     camera_settings = [
         ((12.391, -1412.3, 457.6), (76.4, 0, 0), 'Camera1'),
-        ((50, -1300, 400), (80, 0, 15), 'Camera2'),
-        ((-30, -1250, 420), (75, 0, -15), 'Camera3'),
-    ]
+        ((250, 500, 400), (60, 0, 150), 'Camera2'),
+        ((-350, 550, 450), (60, 0, 211), 'Camera3')
 
+    ]
+    cameras = []
     # Add cameras to the scene
     for location, rotation, name in camera_settings:
-        add_camera(location, rotation, name)
+        camera = add_camera(location, rotation, name)
+        cameras.append(camera)
+    return cameras
 
 # Function to find objects with animation data
 def find_objects_with_animation():
@@ -122,7 +134,9 @@ def move_action_to_nla(armature_name, action_name):
     else:
         print(f"No active action on armature '{armature_name}' to move.")
 
-def process_all_tracks(armature_name, champion_name, skin_name, output_dir, track_limit=None):
+
+def process_all_tracks(armature_name, champion_name, skin_name, track_limit=None):
+    cameras = setup_cameras()
     armature = bpy.data.objects.get(armature_name)
     bpy.context.view_layer.objects.active = armature
     armature.select_set(True)
@@ -145,17 +159,19 @@ def process_all_tracks(armature_name, champion_name, skin_name, output_dir, trac
                 animation_length = frame_end - frame_start
 
                 # Adjusted dynamic interval calculation
-                if animation_length <= 20:
-                    interval = 2
-                elif animation_length <= 100:
-                    interval = max(2, animation_length // 20)
-                else:
-                    interval = max(5, animation_length // 50)
-                
-                cameras = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
+                interval = animation_length // 5 + 1
+                # if animation_length <= 20:
+                #     interval = 2
+                # elif animation_length <= 100:
+                #     interval = max(2, animation_length // 20)
+                # else:
+                #     interval = max(5, animation_length // 50)
+
                 # Render at calculated intervals within this strip
                 for frame in range(frame_start, frame_end + 1, interval):
-                    render_and_save(frame, track.name, strip.name, champion_name, skin_name, cameras, output_dir)
+                    for cam_num, camera in enumerate(cameras):
+                        bpy.context.scene.camera = camera
+                        render_and_save(frame, track.name, strip.name, champion_name, skin_name, cam_num)
 
             track.mute = True
             update_scene()

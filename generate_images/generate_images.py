@@ -18,18 +18,22 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Set a limit for the number of models to process
-    models_limit = 2
+    # models_limit = 18
+    # models_limit = 1000
     # Counter for models proccessed in loop
     models_processed = 0
     # Set a limit for the number of Tracks to process
-    track_limit = 2
+    # track_limit = 10
+    track_limit = None
     # List of champions to process, leave empty to process all champions
-    champions_to_process = ['Ahri']  # Add champion names like 'Ahri', 'Aatrox', etc.
+    # champions_to_process = ['Akshan']  # Add champion names like 'Ahri', 'Aatrox', etc.
+    champions_to_process = None  # Add champion names like 'Ahri', 'Aatrox', etc.
+
 
     # Loop through each champion directory in the models directory
     for champion_dir in models_directory.iterdir():
-        if models_processed >= models_limit:
-            break  # Stop processing if the limit is reached
+        # if models_processed >= models_limit:
+        #     break  # Stop processing if the limit is reached
         if champion_dir.is_dir() and (not champions_to_process or champion_dir.name in champions_to_process):  # Ensure it is a directory
             champion_name = champion_dir.name  # Get the champion name
             # Loop through each skin directory within the champion's directory
@@ -70,13 +74,13 @@ def main():
                                 generate_images_functions.move_action_to_nla(animated_object_name, action_name)
 
                             # Process all NLA tracks for the animated object
-                            generate_images_functions.process_all_tracks(animated_object_name, champion_name, skin_name, output_dir, track_limit)
+                            generate_images_functions.process_all_tracks(animated_object_name, champion_name, skin_name, track_limit)
                             
                         else:
                             print("No animated objects found in this model.")
                     models_processed += 1  # Increment the counter after processing a model
-                    if models_processed >= models_limit:
-                        break  # Stop processing if the limit is reached
+                    # if models_processed >= models_limit:
+                    #     break  # Stop processing if the limit is reached
 
 if __name__ == "__main__":
     main()
