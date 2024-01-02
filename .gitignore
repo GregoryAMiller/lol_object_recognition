@@ -1,9 +1,14 @@
 # Ignore directories
 images/
+labels/
 models/
 venv/
+.venv/
+__pycache__/
+ultralyticsplus/
 
 # Ignore specific files
 ahri_example.blend
 notes.txt
 *.glb
+*.pt

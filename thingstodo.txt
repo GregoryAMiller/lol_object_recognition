@@ -1,0 +1,3 @@
+- change from PNG images to JPEG (to save space)
+- finish script to label images
+- train the model with labeled data (fine-tune yolov8 or another model)
