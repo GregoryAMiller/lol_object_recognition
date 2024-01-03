@@ -39,7 +39,7 @@ def label_image(model, image_path, labels_dir):
         box = boxes[0]
         # print(box)
         # Only take the first box
-        x_center, y_center, width, height = box.xyxy[0]
+        x_center, y_center, width, height = box.xyxyn[0]
         
         # Format the label data
         label_data = f'{skin_name} {x_center} {y_center} {width} {height}'
