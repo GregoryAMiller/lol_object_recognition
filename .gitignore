@@ -6,9 +6,14 @@ venv/
 .venv/
 __pycache__/
 ultralyticsplus/
+test/
+train/
+val/
 
 # Ignore specific files
 ahri_example.blend
 notes.txt
 *.glb
 *.pt
+listing.txt
+dataset.yaml
