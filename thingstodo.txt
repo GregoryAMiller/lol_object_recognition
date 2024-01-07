@@ -1,3 +1,8 @@
-- change from PNG images to JPEG (to save space)
-- finish script to label images
-- train the model with labeled data (fine-tune yolov8 or another model)
+- TODO:
+    - Find a model that can properly label our generated images
+
+- DONE:
+    - change from PNG images to JPEG (to save space) (Done)
+    - finish script to label images (Done)
+    - train the model with labeled data (fine-tune yolov8 or another model) (Done)
+
