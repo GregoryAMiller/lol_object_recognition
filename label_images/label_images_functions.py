@@ -18,7 +18,7 @@ def load_configure_model():
     return model
 
 # Function to label the image
-def label_image(model, image_path, labels_dir):
+def label_image(model, image_path, labels_dir, results_dir, testing=False):
     # Extract the label name from the folder structure
     champion_name = image_path.parent.parent.name
     skin_name = image_path.parent.name
@@ -52,5 +52,17 @@ def label_image(model, image_path, labels_dir):
         with open(label_file_path, 'w') as f:
             f.write(label_data)
         print(f"Label file created: {label_file_path}")
+        # Save annotated image only if testing is True
+        if testing:
+            # Draw bounding box on the image
+            start_point = (int((x_center - width / 2) * image.shape[1]), int((y_center - height / 2) * image.shape[0]))
+            end_point = (int((x_center + width / 2) * image.shape[1]), int((y_center + height / 2) * image.shape[0]))
+            cv2.rectangle(image, start_point, end_point, (255, 0, 0), 2)
+            result_file_path = results_dir / champion_name / skin_name / f"{image_path.stem}_annotated.jpg"
+            result_file_path.parent.mkdir(parents=True, exist_ok=True)
+            cv2.imwrite(str(result_file_path), image)
+            print(f"Annotated image saved: {result_file_path}")
+        # else:
+        #     print("Testing mode is off, annotated image not saved.")
     else:
         print(f"No boxes found in {image_path}")
