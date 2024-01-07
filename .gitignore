@@ -9,7 +9,13 @@ ultralyticsplus/
 test/
 train/
 val/
-
+valid/
+val2/
+train2/
+test2/
+runs/
+results/
+Ahri_Academia___Previsualizaci_n___League_of_Legends_frames/
 # Ignore specific files
 ahri_example.blend
 notes.txt
@@ -17,3 +23,7 @@ notes.txt
 *.pt
 listing.txt
 dataset.yaml
+data.yaml
+youtube_to_images.ipynb
+*.mkv
+*.jpg
