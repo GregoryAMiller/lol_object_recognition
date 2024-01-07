@@ -35,7 +35,7 @@ def create_and_update_label_files(base_path):
                     file.write(updated_content)
 
         # Create listing.txt in the base directory of the current sub_dir
-        listing_path = Path.cwd().parent / 'listing.txt'
+        listing_path = Path.cwd() / 'listing.txt'
         with open(listing_path, 'w') as listing_file:
             listing_file.write('\n'.join(listing_content))
         print(f'Created listing file at: {listing_path}')
