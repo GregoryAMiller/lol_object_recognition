@@ -11,3 +11,14 @@ Collecting 3d Model Assets:
 
 Generating Images of 3d Assets:
     - Under generate_data directory run the file generate_images.py (or .ipynb file with the same name)
+
+
+ORDER OF OPERATIONS:
+    1 - Collect the models for blender: model_collection folder run model_collection.py
+    2 - Generate images using blender: generate_images folder run generate_images.py
+    3 - Label the generated images: label_images folder run label_images.py
+    4 - Calculate and modify label name to interger: modeling folder run fix_labels.py
+    5 - Create yaml file for yolov8 model: modeling folder run create_yaml_file.py
+    6 - Split data into train,test,val in yolov8 format: modeling folder run train_test_val_split.py
+    7 - Fine-Tune (train) base Yolov8 model with our data: modeling folder run fine_tune_yolov8.py
+    8 - View Images of the new model on some test images: modeling folder run model_evaluation.py
