@@ -42,13 +42,15 @@ def render_and_save(frame_number, track_name, strip_name, champion_name, skin_na
     # ensure_camera_exists()
     bpy.context.scene.frame_set(frame_number)
     # Adjust the filename to include the strip name for uniqueness
-    filename = f"{track_name}_{strip_name}_frame{frame_number}_camera{camera_number}.png"
+    filename = f"{track_name}_{strip_name}_frame{frame_number}_camera{camera_number}.jpg"
     # Create directory path for the current champion and skin
     output_dir = get_base_directory() / 'images'
     champion_skin_dir = Path(output_dir) / champion_name / skin_name
     champion_skin_dir.mkdir(parents=True, exist_ok=True)
     file_path = champion_skin_dir / filename
     bpy.context.scene.render.filepath = str(file_path)
+    # Change render settings to output JPEG format
+    bpy.context.scene.render.image_settings.file_format = 'JPEG'
     bpy.ops.render.render(write_still=True)
 
 
