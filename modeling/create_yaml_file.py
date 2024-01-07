@@ -38,10 +38,10 @@ def create_yaml_from_listing(listing_path, yaml_filename, base_directory):
         yaml_file.write(f"names: {names_str}\n")
 
 def main():
-    base_directory = Path.cwd().parent
+    current_dir = Path.cwd()
     # Define the paths
-    listing_path = base_directory / 'listing.txt'
-    yaml_filename = base_directory / 'dataset.yaml'
+    listing_path = current_dir / 'listing.txt'
+    yaml_filename = current_dir / 'dataset.yaml'
     # Call the function to create the YAML file
     create_yaml_from_listing(listing_path, yaml_filename, base_directory)
 
