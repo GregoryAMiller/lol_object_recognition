@@ -26,8 +26,8 @@ def main():
     # track_limit = 10
     track_limit = None
     # List of champions to process, leave empty to process all champions
-    # champions_to_process = ['Akshan']  # Add champion names like 'Ahri', 'Aatrox', etc.
-    champions_to_process = None  # Add champion names like 'Ahri', 'Aatrox', etc.
+    champions_to_process = ['Ahri']  # Add champion names like 'Ahri', 'Aatrox', etc.
+    # champions_to_process = None  # Add champion names like 'Ahri', 'Aatrox', etc.
 
 
     # Loop through each champion directory in the models directory
