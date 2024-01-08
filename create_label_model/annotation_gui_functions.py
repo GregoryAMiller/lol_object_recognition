@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import simpledialog, filedialog
 from PIL import Image, ImageTk
-import cv2
+# import cv2
 # import os
 from pathlib import Path
-import csv
-import tkinter.ttk as ttk
+# import csv
+# import tkinter.ttk as ttk
 # import threading
 import random
 
@@ -153,7 +153,7 @@ class AnnotationTool:
         if self.current_image_index < len(self.images):
             self.canvas.delete("all")  # Clear the previous image and box
 
-            image_dir = Path(self.image_dir)
+            image_path = Path(self.images[self.current_image_index])
             original_image = Image.open(image_path)
 
             # Calculate the new size maintaining aspect ratio
@@ -162,7 +162,7 @@ class AnnotationTool:
             new_height = int(original_image.height * ratio)
 
             # Resize the image for display
-            display_image = original_image.resize((new_width, new_height), Image.ANTIALIAS)
+            display_image = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
             self.current_image = ImageTk.PhotoImage(display_image)
 
             # Calculate position to center the image
@@ -305,14 +305,3 @@ class AnnotationTool:
         else:
             print("No more images.")
             self.root.quit()
-
-# Main function to start the GUI
-def main():
-    root = tk.Tk()
-    # root.geometry("1000x800")  # Set the size of the window
-    default_label = 'Champion' # Set as None if you want to hand label every image
-    app = AnnotationTool(root, default_label)
-    root.mainloop()
-# # Run the main function in a separate thread
-# thread = threading.Thread(target=main)
-# thread.start()
