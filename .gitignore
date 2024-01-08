@@ -24,6 +24,6 @@ notes.txt
 listing.txt
 dataset.yaml
 data.yaml
-youtube_to_images.ipynb
+*.ipynb
 *.mkv
 *.jpg
