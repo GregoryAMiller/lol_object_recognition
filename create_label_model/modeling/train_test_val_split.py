@@ -3,18 +3,21 @@ import random
 import shutil
 
 def get_all_files(base_dir, ext):
-    return [file for file in base_dir.glob(f'*{ext}') if file.is_file()]
+    files = [file for file in base_dir.glob(f'*{ext}') if file.is_file()]
+    print(f"Found {len(files)} '{ext}' files in {base_dir}")
+    return files
 
-def match_files(image_files, label_files):
+def match_files(image_files, label_files, image_dir, label_dir):
     matched_files = []
-    label_files_set = set([f.stem for f in label_files])
+    label_files_set = set(label_files)
     for image_file in image_files:
-        if image_file.stem in label_files_set:
-            label_file = image_file.with_suffix('.txt')
+        label_file = label_dir / image_file.relative_to(image_dir).with_suffix('.txt')
+        if label_file in label_files_set:
             matched_files.append((image_file, label_file))
     return matched_files
 
 def create_dirs_and_copy(file_pairs, start_idx, end_idx, data_type, base_path):
+    # print('hello')
     for image_file, label_file in file_pairs[start_idx:end_idx]:
         image_folder_path = base_path / data_type / 'images'
         label_folder_path = base_path / data_type / 'labels'
@@ -33,13 +36,16 @@ def main():
 
     # Base path where train, test, and val directories will be created
     base_path = Path.cwd().parent
-
+    images_dir = base_path / 'images'
+    labels_dir = base_path / 'labels'
+    # print(base_path)
     # Get all file paths from both directories
-    image_files = get_all_files(base_path, '.jpg')  # Assuming images are .jpg
-    label_files = get_all_files(base_path, '.txt')
+    image_files = get_all_files(images_dir, '.png')  # Assuming images are .jpg
+    label_files = get_all_files(labels_dir, '.txt')
 
     # Shuffle the file list
-    matched_files = match_files(image_files, label_files)
+    matched_files = match_files(image_files, label_files, images_dir, labels_dir)
+    print(matched_files)
     random.shuffle(matched_files)
 
     # Calculate split indices
