@@ -23,7 +23,7 @@ def update_label_files(image_path):
 
 def main():
     base_directory = Path.cwd().parent
-    images_dir = base_directory / 'images'
+    images_dir = base_directory / 'labels'
     update_label_files(images_dir)
 
 if __name__ == '__main__':
