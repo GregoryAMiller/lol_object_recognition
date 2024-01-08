@@ -5,13 +5,13 @@ import zipfile
 
 def copy_random_images(base_directory, current_directory, num_images=500):
     # Path to the base directory containing images
-    base_path = Path(base_directory) / 'images'
+    base_path = Path(base_directory)
 
     # Create a list to store all image paths
     all_images = []
 
     # Walk through the directory structure
-    for path in base_path.rglob('*.jpg'):
+    for path in base_path.rglob('*.png'):
         all_images.append(path)
 
     # Randomly select 500 images
@@ -34,7 +34,8 @@ def zip_directory(folder_path, zip_name):
             zipf.write(path, path.relative_to(folder_path.parent))
 
 def main():
-    base_directory = Path.cwd().parent
+    # base_directory = Path.cwd().parent
+    base_directory = "d:\\lol_champion_model_images\\"
     current_directory = Path.cwd()
     images_directory = copy_random_images(base_directory, current_directory)
 
