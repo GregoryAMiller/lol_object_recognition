@@ -1,5 +1,6 @@
 - TODO:
-    - Find a model that can properly label our generated images
+    - Find a model that can properly label our generated images (Probably not doing)
+    - Fine-tune labeling model for labeling our images
 
 - DONE:
     - change from PNG images to JPEG (to save space) (Done)
