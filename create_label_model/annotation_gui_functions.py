@@ -269,7 +269,7 @@ class AnnotationTool:
         return f'#{r():02x}{r():02x}{r():02x}'
 
     def save_annotations(self):
-        label_dir = Path.cwd() / 'labels2'
+        label_dir = Path.cwd() / 'labels'
         label_dir.mkdir(exist_ok=True)
 
         for image_path_str in self.images:
