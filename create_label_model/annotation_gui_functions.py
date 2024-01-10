@@ -165,9 +165,17 @@ class AnnotationTool:
             display_image = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
             self.current_image = ImageTk.PhotoImage(display_image)
 
-            # Calculate position to center the image
-            x = (canvas_width - new_width) // 2
-            y = (canvas_height - new_height) // 2
+            # Calculate scaling factors based on the original and displayed image sizes
+            self.scale_x = original_image.width / float(new_width)
+            self.scale_y = original_image.height / float(new_height)
+
+            # Calculate offsets for centering the image on the canvas
+            self.x_offset = (canvas_width - new_width) // 2
+            self.y_offset = (canvas_height - new_height) // 2
+
+            # Calculate position to center the image and display it
+            x = self.x_offset
+            y = self.y_offset
             self.canvas.create_image(x, y, anchor='nw', image=self.current_image)
 
         else:
@@ -219,16 +227,16 @@ class AnnotationTool:
             label_y = event.y - 20
             self.rect_label = self.canvas.create_text(label_x, label_y, text=label, anchor='nw', fill=color)
 
-            # Calculate normalized coordinates
-            x_center = (self.start_x + event.x) / 2
-            y_center = (self.start_y + event.y) / 2
-            width = abs(event.x - self.start_x)
-            height = abs(event.y - self.start_y)
+            # Adjust for translation and scale to original image size
+            scaled_x1 = (self.start_x - self.x_offset) * self.scale_x
+            scaled_y1 = (self.start_y - self.y_offset) * self.scale_y
+            scaled_x2 = (event.x - self.x_offset) * self.scale_x
+            scaled_y2 = (event.y - self.y_offset) * self.scale_y
 
             # Append annotation to the list
             self.annotations.append({
-                'image': self.images[self.current_image_index - 1],
-                'bbox': [self.start_x, self.start_y, event.x, event.y],
+                'image': self.images[self.current_image_index],
+                'scaled_bbox': [scaled_x1, scaled_y1, scaled_x2, scaled_y2],
                 'label': label,
                 'rect_id': self.rect,  # Store rectangle ID
                 'label_id': self.rect_label  # Store label ID
@@ -261,33 +269,31 @@ class AnnotationTool:
         return f'#{r():02x}{r():02x}{r():02x}'
 
     def save_annotations(self):
-        label_dir = Path.cwd() / 'labels'
+        label_dir = Path.cwd() / 'labels2'
         label_dir.mkdir(exist_ok=True)
 
-        if self.current_image_index < len(self.images):
-            current_image_path = Path(self.images[self.current_image_index - 1])
-            current_image_annotations = [ann for ann in self.annotations if ann['image'] == str(current_image_path)]
-
-            print(f"Saving annotations for: {current_image_path}")  # Debugging
-            print(f"Annotations: {current_image_annotations}")  # Debugging
+        for image_path_str in self.images:
+            current_image_path = Path(image_path_str)
+            # print(current_image_path)
+            current_image_annotations = [ann for ann in self.annotations if ann['image'] == image_path_str]
+            # print(current_image_annotations)
+            if not current_image_annotations: 
+                continue  # Skip if no annotations for this image
 
             with Image.open(current_image_path) as img:
                 img_width, img_height = img.size
 
-            # Use Path.stem to get the file name without the suffix
             file_name = f"{current_image_path.stem}.txt"
+            print(file_name)
             file_path = label_dir / file_name
-            print(f"Saving file: {file_path}")
 
             with file_path.open('w') as file:
                 for ann in current_image_annotations:
-                    # Normalize coordinates
-                    x_center = (ann['bbox'][0] + ann['bbox'][2]) / 2 / img_width
-                    y_center = (ann['bbox'][1] + ann['bbox'][3]) / 2 / img_height
-                    width = abs(ann['bbox'][2] - ann['bbox'][0]) / img_width
-                    height = abs(ann['bbox'][3] - ann['bbox'][1]) / img_height
+                    x_center = (ann['scaled_bbox'][0] + ann['scaled_bbox'][2]) / 2 / img_width
+                    y_center = (ann['scaled_bbox'][1] + ann['scaled_bbox'][3]) / 2 / img_height
+                    width = abs(ann['scaled_bbox'][2] - ann['scaled_bbox'][0]) / img_width
+                    height = abs(ann['scaled_bbox'][3] - ann['scaled_bbox'][1]) / img_height
 
-                    # Use the label provided by the user for each bounding box
                     file.write(f"{ann['label']} {x_center} {y_center} {width} {height}\n")
 
     def confirm_annotations(self):
