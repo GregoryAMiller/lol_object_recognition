@@ -57,6 +57,9 @@ class AnnotationTool:
         self.reset_all_button = tk.Button(button_frame, text="Reset All Boxes", command=self.reset_all_boxes, **button_style)
         self.reset_all_button.pack(side="left")
 
+        self.delete_prev_label_and_go_back_button = tk.Button(button_frame, text="Undo Last Label", command=self.delete_prev_label_and_go_back, **button_style)
+        self.delete_prev_label_and_go_back_button.pack(side="left")
+
         self.confirm_button = tk.Button(button_frame, text="Confirm", command=self.confirm_annotations, **button_style)
         self.confirm_button.pack(side="left")
 
@@ -81,6 +84,21 @@ class AnnotationTool:
 
         # Initialize the current image label
         self.update_image_label()
+
+    def delete_prev_label_and_go_back(self):
+        # Go back to the previous image first
+        self.previous_image()
+
+        # Now, find and delete the label file of the previous image
+        if self.current_image_index >= 0 and self.current_image_index < len(self.images):
+            previous_image_path = Path(self.images[self.current_image_index])
+            label_file_path = Path.cwd() / 'labels' / f"{previous_image_path.stem}.txt"
+            if label_file_path.exists():
+                try:
+                    label_file_path.unlink()  # Delete the label file
+                    print(f"Deleted label file: {label_file_path}")
+                except OSError as e:
+                    print(f"Error deleting label file: {e.strerror}")
 
     def previous_image(self):
         # Check if there is a previous image
