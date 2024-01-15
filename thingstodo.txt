@@ -1,9 +1,14 @@
 - TODO:
-    - Find a model that can properly label our generated images (Probably not doing)
-    - Fine-tune labeling model for labeling our images
+    - determine if the labeling model is good enough for deployment
+    - label all images
+    - train model to detect champions/skins
+    
+    
 
 - DONE:
     - change from PNG images to JPEG (to save space) (Done)
     - finish script to label images (Done)
     - train the model with labeled data (fine-tune yolov8 or another model) (Done)
+    - Find a model that can properly label our generated images (did not do, trained our own labeling model)
+    - Fine-tune labeling model for labeling our images (done)
 
