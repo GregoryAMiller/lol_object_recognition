@@ -4,7 +4,7 @@ from annotation_gui_functions import AnnotationTool
 def main():
     root = tk.Tk()
     # root.geometry("1000x800")  # Set the size of the window
-    default_label = 'Champion' # Set as None if you want to hand label every image
+    default_label = 'Champion' # Set as None if you want to hand label every image, Set as 'Example' string to have it auto label everything as that label
     app = AnnotationTool(root, default_label)
     root.mainloop()
 # # Run the main function in a separate thread
