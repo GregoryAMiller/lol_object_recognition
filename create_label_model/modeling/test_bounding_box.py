@@ -37,7 +37,8 @@ def process_image(image_path, bbox_path):
 
 # Example usage
 base_directory = Path.cwd().parent
+# print(f'Base directory: {base_directory}')
 # images_dir = base_directory / 'labels'
-image_path = base_directory / 'images' / 'Akali_Base_Attack1_to_Run.anm_Akali_Base_Attack1_to_Run.anm_Armature_frame33_camera1.png'
-bbox_path = base_directory / 'labels' / 'Akali_Base_Attack1_to_Run.anm_Akali_Base_Attack1_to_Run.anm_Armature_frame33_camera1.txt'
+image_path = base_directory / 'images' / 'Attack1_toRun.SKINS_Ahri_ASU_PrePro.anm_Attack1_toRun.SKINS_Ahri_ASU_PrePro.anm_Armature_frame1_camera0.jpg'
+bbox_path = base_directory / 'labels' / 'Attack1_toRun.SKINS_Ahri_ASU_PrePro.anm_Attack1_toRun.SKINS_Ahri_ASU_PrePro.anm_Armature_frame1_camera0.txt'
 process_image(image_path, bbox_path)
