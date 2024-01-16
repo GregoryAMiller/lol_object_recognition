@@ -9,7 +9,7 @@ import cv2
 def load_configure_model():
     # Load model C:\Users\Grego\Documents\1_projects\lol_object_recognition\create_label_model\modeling\runs\detect\train3\weights\best.pt
     # model = YOLO(f'{Path.cwd().parent}/create_label_model/modeling/runs/detect/train3/weights/best.pt')
-    model = YOLO(f'{Path.cwd()}/test2.pt')
+    model = YOLO(f'{Path.cwd()}/best.pt')
     # print(f'{Path.cwd().parent}/create_label_model/modeling/runs/detect/train3/weights/best.pt')
     # print(model)
     # Set model parameters
