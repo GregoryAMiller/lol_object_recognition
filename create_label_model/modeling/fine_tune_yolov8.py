@@ -16,18 +16,28 @@ print('Starting Training.....')
 results = model.train(
     data=f"{base_directory}/dataset.yaml",
     epochs=10,
-    batch=16,  # Use 'batch' instead of 'batch_size'
-    imgsz=640,  # Image size
-    device=device,  # Device to train on
+    patience=10,  # Set patience for early stopping
+    batch=16,  # Adjust batch size if needed
+    lr0=0.01,  # Initial learning rate
+    lrf=0.01,  # Final learning rate
+    weight_decay=0.0005,  # Regularization
+    rect=True,  # Rectangular training
+    cos_lr=False,  # Cosine learning rate scheduler
+    close_mosaic=10,  # Disable mosaic augmentation for final epochs
+    dropout=0.0,  # Use dropout if applicable
+    label_smoothing=0.0,  # Label smoothing
     seed=42,
-    plots=True
+    plots=True,
+    save=True
 )  # train the model
-print('Training Ended.....')
+# More parameters that can be passed into model.train
+    # resume = False/True # resume training from last checkpoint rather than training over again
+print('Training Ended.....')  
 
 # Export the model to the working directory
-print('Exporting Model')
-model.export(export_dir=f'{base_directory}/')
-print('Model Exported to {base_directory}/')
+# print('Exporting Model')
+# model.export(export_dir=f'{base_directory}/')
+# print('Model Exported to {base_directory}/')
 
 # Evaluate model performance on the validation set
 print('Model Results:')
