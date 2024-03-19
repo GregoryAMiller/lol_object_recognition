@@ -1,29 +1,30 @@
+# Temp file (DELETE THESE)
+/Ahri
+/Aatrox
+final_train_test_val_dataset/
+
 # Ignore directories
-images/
-labels/
-models/
-venv/
-.venv/
-__pycache__/
-ultralyticsplus/
-test/
-train/
-val/
-valid/
-val2/
-train2/
-test2/
+# data
+data/
 runs/
 results/
+output/
 Ahri_Academia___Previsualizaci_n___League_of_Legends_frames/
+models/
+# environment
+venv/
+__pycache__/
+ultralyticsplus/
+
 # Ignore specific files
-ahri_example.blend
-notes.txt
+*.txt
+*.blend
+*.blend1
 *.glb
 *.pt
-listing.txt
-dataset.yaml
-data.yaml
+*.yaml
 *.ipynb
 *.mkv
 *.jpg
+*json
+*png
