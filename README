@@ -2,23 +2,26 @@ Requeriments:
     - Python 3.10.0 was used in creating all files. Any version higher should still work but see bpy (Blender api) requeriments.
 
 Generating YAML File:
-    - Under model_collection directory run the file yaml_creation.py (or .ipynb file with the same name)
-        - This file will be saved in the model_collection directory which will be needed for collecting models
+    - Under champion_3dmodels_collection directory run the file yaml_creation.py 
+        - This file will be saved in the champion_3dmodels_collection directory which will be needed for collecting models
 
 Collecting 3d Model Assets:
-    - Under model_collection directory run the file model_collection.py (or .ipynb file with the same name), make sure to have the .yaml file created and in the same directory as model_collection.py (or .ipynb file with the same name)
-        - These 3d models will be saved in the models folder in the parent directory as glb files under the champion name they belong
+    - Under champion_3dmodels_collection directory run the file model_collection.py, make sure to have the .yaml file created and in the same directory as model_collection.py (or .ipynb file with the same name)
+        - These 3d models will be saved in the champion_models folder in the parent directory as glb files under the champion name they belong
 
 Generating Images of 3d Assets:
-    - Under generate_data directory run the file generate_images.py (or .ipynb file with the same name)
+    - Under image_generation/blank_background_champion_images directory run the file generate_images.py 
 
+Generating Images of champion Images on Map Images (final image data):
+    - Under image_generation/final_images diectory run generate_final_images.py file 
 
 ORDER OF OPERATIONS:
-    1 - Collect the models for blender: model_collection folder run model_collection.py
-    2 - Generate images using blender: generate_images folder run generate_images.py
-    3 - Label the generated images: label_images folder run label_images.py
-    4 - Calculate and modify label name to interger: modeling folder run fix_labels.py
-    5 - Create yaml file for yolov8 model: modeling folder run create_yaml_file.py
-    6 - Split data into train,test,val in yolov8 format: modeling folder run train_test_val_split.py
-    7 - Fine-Tune (train) base Yolov8 model with our data: modeling folder run fine_tune_yolov8.py
-    8 - View Images of the new model on some test images: modeling folder run model_evaluation.py
+    1 - Collect the models for blender: champion_3dmodels_collection folder run model_collection.py
+    2 - Generate images using blender: image_generation/blank_background_champion_images folder run generate_images.py
+    3 - Label the generated images: label_model_files folder run label_images.py
+    4 - Calculate and modify label name to interger: main_model_files folder run fix_labels.py
+    5 - Generate final images: image_generation/final_images run generate_final_images.py
+    6 - Create yaml file for yolov8 model: main_model_files folder run create_yaml_file.py
+    7 - Split data into train,test,val in yolov8 format: main_model_files folder run train_test_val_split.py
+    8 - Fine-Tune (train) base Yolov8 model with our data: main_model_files folder run fine_tune_yolov8.py
+    9 - View Images of the new model on some test images: main_model_files folder run model_evaluation.py

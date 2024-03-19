@@ -1,7 +1,9 @@
 - TODO:
+    - Get map image assets
     - determine if the labeling model is good enough for deployment
     - label all images
     - train model to detect champions/skins
+    - get bounding box coordinates -> make images transparent background -> place image at the location of the bounding box on map image
     
     
 
